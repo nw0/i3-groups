@@ -87,32 +87,39 @@ impl Controller {
             .expect("no focused workspace")
     }
 
-    fn switch_workspace(&self, workspace: &WorkspaceName) {
+    fn switch_workspace(&self, workspace: &WorkspaceName, auto_back_and_forth: bool) {
         self.send_i3_command(
-            format!("workspace --no-auto-back-and-forth {}", workspace.title()).as_ref(),
+            format!(
+                "workspace {}{}",
+                match auto_back_and_forth {
+                    true => "",
+                    false => "--no-auto-back-and-forth ",
+                },
+                workspace.title()
+            )
+            .as_ref(),
         );
     }
 
     fn move_to_workspace(&self, workspace: &WorkspaceName) {
-        // FIXME: no-auto-back-and-forth?
         self.send_i3_command(format!("move container to workspace {}", workspace.title()).as_ref());
     }
 
     pub fn focus_workspace(&mut self, number: Option<usize>) {
         let mut focused = WorkspaceName::from_workspace(self.get_focused_workspace());
         focused.number = number.expect("must specify workspace number");
-        self.switch_workspace(&focused);
+        self.switch_workspace(&focused, true);
     }
 
     // Re-focus the current workspace to a new group, retaining local number
-    pub fn focus_group(&mut self, group: Option<usize>) {
+    pub fn focus_group(&mut self, group: Option<usize>, auto_back_and_forth: bool) {
         let target_group = group.expect("must explicitly specify group");
         let mut focused = WorkspaceName::from_workspace(self.get_focused_workspace());
         focused.group = match target_group {
             0 => None,
             x => Some(x),
         };
-        self.switch_workspace(&focused);
+        self.switch_workspace(&focused, auto_back_and_forth);
     }
 
     // Only re-focus workspaces not belonging to the default group
@@ -132,12 +139,12 @@ impl Controller {
 
         for workspace in visible {
             if workspace != focused {
-                self.switch_workspace(&WorkspaceName::from_name(&workspace));
-                self.focus_group(group);
+                self.switch_workspace(&WorkspaceName::from_name(&workspace), false);
+                self.focus_group(group, false);
             }
         }
-        self.switch_workspace(&WorkspaceName::from_name(&focused));
-        self.focus_group(group);
+        self.switch_workspace(&WorkspaceName::from_name(&focused), false);
+        self.focus_group(group, false);
     }
 
     pub fn move_container_to_workspace(&mut self, number: Option<usize>) {

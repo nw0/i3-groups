@@ -13,7 +13,7 @@ fn main() {
 
     match args.subcommands {
         Subcommands::FocusGroup { group_number } => {
-            controller.focus_group(group_number);
+            controller.focus_group(group_number, true);
         }
         Subcommands::FocusGroupAll { group_number } => {
             controller.focus_group_all(group_number);
