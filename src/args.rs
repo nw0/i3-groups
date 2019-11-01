@@ -14,4 +14,9 @@ pub enum Subcommands {
         #[structopt(name = "group-number")]
         group_number: Option<usize>,
     },
+    #[structopt(name = "focus-group-all")]
+    FocusGroupAll {
+        #[structopt(name = "group-number")]
+        group_number: Option<usize>,
+    },
 }

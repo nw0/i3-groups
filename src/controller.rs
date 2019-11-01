@@ -73,6 +73,13 @@ impl Controller {
         self.workspaces.as_ref().unwrap()
     }
 
+    fn get_visible_workspaces(&mut self) -> Vec<&Workspace> {
+        self.get_workspaces()
+            .iter()
+            .filter(|w| w.visible)
+            .collect::<Vec<_>>()
+    }
+
     fn get_focused_workspace(&mut self) -> &Workspace {
         self.get_workspaces()
             .iter()
@@ -99,5 +106,18 @@ impl Controller {
 
     // Only re-focus workspaces not belonging to the default group
     // Re-focus to the same- or lower-numbered workspace of the target group
-    pub fn focus_group_all(&mut self, group: Option<usize>) {}
+    pub fn focus_group_all(&mut self, group: Option<usize>) {
+        let visible_vec = self.get_visible_workspaces();
+        let focused = visible_vec.iter().find(|w| w.focused).expect("no focused workspace").name.clone();
+        let visible = visible_vec.iter().map(|w| w.name.clone()).collect::<Vec<_>>();
+
+        for workspace in visible {
+            if workspace != focused {
+                self.switch_workspace(&WorkspaceName::from_name(&workspace));
+                self.focus_group(group);
+            }
+        }
+        self.switch_workspace(&WorkspaceName::from_name(&focused));
+        self.focus_group(group);
+    }
 }
