@@ -21,5 +21,8 @@ fn main() {
         Subcommands::FocusWorkspace { workspace_number } => {
             controller.focus_workspace(workspace_number);
         }
+        Subcommands::MoveContainerToWorkspace { workspace_number } => {
+            controller.move_container_to_workspace(workspace_number);
+        }
     }
 }

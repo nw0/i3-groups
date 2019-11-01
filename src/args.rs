@@ -24,4 +24,9 @@ pub enum Subcommands {
         #[structopt(name = "workspace-number")]
         workspace_number: Option<usize>,
     },
+    #[structopt(name = "move-container-to-workspace")]
+    MoveContainerToWorkspace {
+        #[structopt(name = "workspace-number")]
+        workspace_number: Option<usize>,
+    },
 }

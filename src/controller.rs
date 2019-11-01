@@ -93,6 +93,11 @@ impl Controller {
         );
     }
 
+    fn move_to_workspace(&self, workspace: &WorkspaceName) {
+        // FIXME: no-auto-back-and-forth?
+        self.send_i3_command(format!("move container to workspace {}", workspace.title()).as_ref());
+    }
+
     pub fn focus_workspace(&mut self, number: Option<usize>) {
         let mut focused = WorkspaceName::from_workspace(self.get_focused_workspace());
         focused.number = number.expect("must specify workspace number");
@@ -133,5 +138,11 @@ impl Controller {
         }
         self.switch_workspace(&WorkspaceName::from_name(&focused));
         self.focus_group(group);
+    }
+
+    pub fn move_container_to_workspace(&mut self, number: Option<usize>) {
+        let mut focused = WorkspaceName::from_workspace(self.get_focused_workspace());
+        focused.number = number.expect("must specify workspace number");
+        self.move_to_workspace(&focused);
     }
 }
