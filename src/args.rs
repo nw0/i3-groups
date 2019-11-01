@@ -29,4 +29,9 @@ pub enum Subcommands {
         #[structopt(name = "workspace-number")]
         workspace_number: Option<usize>,
     },
+    #[structopt(name = "move-container-to-group")]
+    MoveContainerToGroup {
+        #[structopt(name = "group-number")]
+        group_number: Option<usize>,
+    },
 }

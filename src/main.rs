@@ -24,5 +24,8 @@ fn main() {
         Subcommands::MoveContainerToWorkspace { workspace_number } => {
             controller.move_container_to_workspace(workspace_number);
         }
+        Subcommands::MoveContainerToGroup { group_number } => {
+            controller.move_container_to_group(group_number);
+        }
     }
 }

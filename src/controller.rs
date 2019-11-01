@@ -145,4 +145,14 @@ impl Controller {
         focused.number = number.expect("must specify workspace number");
         self.move_to_workspace(&focused);
     }
+
+    pub fn move_container_to_group(&mut self, group: Option<usize>) {
+        let target_group = group.expect("must explicitly specify group");
+        let mut focused = WorkspaceName::from_workspace(self.get_focused_workspace());
+        focused.group = match target_group {
+            0 => None,
+            x => Some(x),
+        };
+        self.move_to_workspace(&focused);
+    }
 }
