@@ -28,6 +28,10 @@ impl WorkspaceName {
         }
     }
 
+    fn from_workspace(workspace: &Workspace) -> WorkspaceName {
+        WorkspaceName::from_name(&workspace.name)
+    }
+
     fn title(&self) -> String {
         match self.group {
             None => format!("{}", self.number),
@@ -85,7 +89,7 @@ impl Controller {
     // Re-focus the current workspace to a new group, retaining local number
     pub fn focus_group(&mut self, group: Option<usize>) {
         let target_group = group.expect("must explicitly specify group");
-        let mut focused = WorkspaceName::from_name(&self.get_focused_workspace().name);
+        let mut focused = WorkspaceName::from_workspace(self.get_focused_workspace());
         focused.group = match target_group {
             0 => None,
             x => Some(x),
