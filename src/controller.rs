@@ -93,6 +93,12 @@ impl Controller {
         );
     }
 
+    pub fn focus_workspace(&mut self, number: Option<usize>) {
+        let mut focused = WorkspaceName::from_workspace(self.get_focused_workspace());
+        focused.number = number.expect("must specify workspace number");
+        self.switch_workspace(&focused);
+    }
+
     // Re-focus the current workspace to a new group, retaining local number
     pub fn focus_group(&mut self, group: Option<usize>) {
         let target_group = group.expect("must explicitly specify group");
@@ -108,8 +114,16 @@ impl Controller {
     // Re-focus to the same- or lower-numbered workspace of the target group
     pub fn focus_group_all(&mut self, group: Option<usize>) {
         let visible_vec = self.get_visible_workspaces();
-        let focused = visible_vec.iter().find(|w| w.focused).expect("no focused workspace").name.clone();
-        let visible = visible_vec.iter().map(|w| w.name.clone()).collect::<Vec<_>>();
+        let focused = visible_vec
+            .iter()
+            .find(|w| w.focused)
+            .expect("no focused workspace")
+            .name
+            .clone();
+        let visible = visible_vec
+            .iter()
+            .map(|w| w.name.clone())
+            .collect::<Vec<_>>();
 
         for workspace in visible {
             if workspace != focused {

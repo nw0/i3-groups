@@ -14,9 +14,12 @@ fn main() {
     match args.subcommands {
         Subcommands::FocusGroup { group_number } => {
             controller.focus_group(group_number);
-        },
+        }
         Subcommands::FocusGroupAll { group_number } => {
             controller.focus_group_all(group_number);
-        },
+        }
+        Subcommands::FocusWorkspace { workspace_number } => {
+            controller.focus_workspace(workspace_number);
+        }
     }
 }
